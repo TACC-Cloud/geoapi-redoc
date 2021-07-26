@@ -1,0 +1,1780 @@
+{
+    "swagger": "2.0",
+    "basePath": "/",
+    "paths": {
+        "/notifications/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/NotificationResponse"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a list of notifications",
+                "operationId": "get",
+                "tags": [
+                    "notifications"
+                ]
+            }
+        },
+        "/projects/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Project"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a listing of projects",
+                "operationId": "getProjects",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "query",
+                        "type": "array",
+                        "description": "uuid of specific projects to return instead of complete list",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv"
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "description": "Create a new project",
+                "operationId": "createProject",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/rapid/": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "description": "Create a new project from a Rapid recon project storage system",
+                "operationId": "createRapidProject",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/RapidProject"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "description": "Get the metadata about a project",
+                "operationId": "getProjectById",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Delete a project, all associated features and metadata. THIS CANNOT BE UNDONE",
+                "operationId": "deleteProject",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "description": "Update metadata about a project",
+                "operationId": "updateProject",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/export/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "description": "Save a project file to tapis",
+                "operationId": "exportProject",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/TapisSaveFile"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/features/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FeatureCollection"
+                            }
+                        }
+                    }
+                },
+                "description": "GET all the features of a project as GeoJSON",
+                "operationId": "getAllFeatures",
+                "parameters": [
+                    {
+                        "name": "assetType",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "bbox",
+                        "in": "query",
+                        "type": "array",
+                        "description": "bounding box: min longitude, min latitude, max longitude, max latitude (i.e bbox=minLon,minLat, maxLon,maxLat",
+                        "items": {
+                            "type": "number"
+                        },
+                        "collectionFormat": "csv"
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Starting date for filtering of features by created date. endDate is also required."
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Ending date for filtering features by created date.  startDate is also required."
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Feature"
+                        }
+                    }
+                },
+                "description": "Add a GeoJSON feature to a project",
+                "operationId": "addGeoJSONFeature",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Feature"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/features/cluster/{numClusters}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "numClusters",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/FeatureCollection"
+                        }
+                    }
+                },
+                "description": "K-Means cluster the features in a project. This returns a FeatureCollection of the centroids with the additional property of \"count\" representing the number of Features that were aggregated into each cluster",
+                "operationId": "clusterFeatures",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/features/files/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Feature"
+                            }
+                        }
+                    }
+                },
+                "description": "Add a new feature(s) to a project from a file that has embedded geospatial information. Current allowed file types are GeoJSON, georeferenced image (jpeg) or gpx track. Any additional key/value pairs in the form will also be placed in the feature(s) metadata",
+                "operationId": "uploadFile",
+                "parameters": [
+                    {
+                        "name": "file",
+                        "in": "formData",
+                        "type": "file",
+                        "required": true
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/features/files/import/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/OkResponse"
+                        }
+                    }
+                },
+                "description": "Import a file into a project from Tapis. Current allowed file types are georeferenced image (jpeg), gpx tracks, GeoJSON and shape files. Thisis an asynchronous operation, files will be imported in the background",
+                "operationId": "importFileFromTapis",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/TapisFileImport"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/features/{featureId}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "featureId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Feature"
+                        }
+                    }
+                },
+                "description": "GET a feature of a project as GeoJSON",
+                "operationId": "getFeature",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/OkResponse"
+                        }
+                    }
+                },
+                "description": "GET a feature of a project as GeoJSON",
+                "operationId": "deleteFeature",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/features/{featureId}/assets/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "featureId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Feature"
+                        }
+                    }
+                },
+                "description": "Add a static asset to a collection. Must be an image or video at the moment",
+                "operationId": "addFeatureAsset",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/TapisFileUpload"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/features/{featureId}/properties/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "featureId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Feature"
+                        }
+                    }
+                },
+                "description": "Update the properties of a feature. This will replace anyexisting properties previously associated with the feature",
+                "operationId": "updateFeatureProperties",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/features/{featureId}/styles/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "featureId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Feature"
+                        }
+                    }
+                },
+                "description": "Update the styles of a feature. This will replace any stylespreviously associated with the feature.",
+                "operationId": "updateFeatureStyles",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/overlays/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Overlay"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a list of all the overlays associated with the current map project.",
+                "operationId": "getOverlays",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Overlay"
+                        }
+                    }
+                },
+                "description": "Add a new overlay to a project.",
+                "operationId": "addOverlay",
+                "parameters": [
+                    {
+                        "name": "file",
+                        "in": "formData",
+                        "type": "file",
+                        "required": true
+                    },
+                    {
+                        "name": "label",
+                        "in": "query",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "minLon",
+                        "in": "query",
+                        "type": "number",
+                        "required": true
+                    },
+                    {
+                        "name": "minLat",
+                        "in": "query",
+                        "type": "number",
+                        "required": true
+                    },
+                    {
+                        "name": "maxLon",
+                        "in": "query",
+                        "type": "number",
+                        "required": true
+                    },
+                    {
+                        "name": "maxLat",
+                        "in": "query",
+                        "type": "number",
+                        "required": true
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/overlays/import/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Overlay"
+                        }
+                    }
+                },
+                "description": "Import an overlay from Tapis",
+                "operationId": "importOverlayFromTapis",
+                "parameters": [
+                    {
+                        "name": "label",
+                        "in": "query",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "minLon",
+                        "in": "query",
+                        "type": "number",
+                        "required": true
+                    },
+                    {
+                        "name": "minLat",
+                        "in": "query",
+                        "type": "number",
+                        "required": true
+                    },
+                    {
+                        "name": "maxLon",
+                        "in": "query",
+                        "type": "number",
+                        "required": true
+                    },
+                    {
+                        "name": "maxLat",
+                        "in": "query",
+                        "type": "number",
+                        "required": true
+                    },
+                    {
+                        "name": "system_id",
+                        "in": "body",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "path",
+                        "in": "body",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/overlays/{overlayId}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "overlayId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Remove an overlay from a project",
+                "operationId": "removeOverlay",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/point-cloud/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PointCloud"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a listing of all the points clouds of a project",
+                "operationId": "getAllPointClouds",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/PointCloud"
+                        }
+                    }
+                },
+                "description": "Add a point cloud to a project",
+                "operationId": "addPointCloud",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/PointCloud"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/point-cloud/{pointCloudId}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "pointCloudId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/PointCloud"
+                        }
+                    }
+                },
+                "description": "Get point cloud of a project",
+                "operationId": "getPointCloud",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Task"
+                        }
+                    }
+                },
+                "summary": ":raises InvalidCoordinateReferenceSystem: in case  file missing coordinate reference system",
+                "description": "Add a file to a point cloud. Current allowed file types are las and laz.",
+                "operationId": "uploadPointCloud",
+                "parameters": [
+                    {
+                        "name": "file",
+                        "in": "formData",
+                        "type": "file",
+                        "required": true
+                    }
+                ],
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "tags": [
+                    "projects"
+                ]
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Delete point cloud, all associated point cloud files will be deleted (however associated feature and feature asset will not be deleted). THIS CANNOT BE UNDONE",
+                "operationId": "deletePointCloud",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/PointCloud"
+                        }
+                    }
+                },
+                "description": "Update point cloud",
+                "operationId": "updatePointCLoud",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/PointCloud"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/point-cloud/{pointCloudId}/import/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "pointCloudId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/OkResponse"
+                        }
+                    }
+                },
+                "description": "Import a point cloud file into a project from Tapis. Current allowed file types are las and laz. This is an asynchronous operation, files will be imported in the background",
+                "operationId": "importPointCloudFileFromTapis",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/TapisFileImport"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/tasks/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Task"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a listing of all the tasks of a project",
+                "operationId": "getTasks",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/tile-servers/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TileServer"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a list of all the tile servers associated with the current map project.",
+                "operationId": "getTileServers",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/TileServer"
+                        }
+                    }
+                },
+                "description": "Add a new tile server to a project.",
+                "operationId": "addTileServer",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/TileServer"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TileServer"
+                            }
+                        }
+                    }
+                },
+                "description": "Update metadata about a tile servers",
+                "operationId": "updateTileServers",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/tile-servers/{tileServerId}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "tileServerId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Remove a tile server from a project",
+                "operationId": "removeTileServer",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/TileServer"
+                        }
+                    }
+                },
+                "description": "Update metadata about a tile server",
+                "operationId": "updateTileServer",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/users/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
+                        }
+                    }
+                },
+                "operationId": "get_project_users_resource",
+                "tags": [
+                    "projects"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Add a user to the project. This allows full access to the project, including deleting the entire thing so chose carefully",
+                "operationId": "addUser",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/projects/{projectId}/users/{username}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "username",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "description": "Remove a user from a project",
+                "operationId": "removeUser",
+                "tags": [
+                    "projects"
+                ]
+            }
+        },
+        "/public-projects/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Project"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a listing of projects",
+                "operationId": "getProjects",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "query",
+                        "type": "array",
+                        "description": "uuid of specific projects to return instead of complete list",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv"
+                    }
+                ],
+                "tags": [
+                    "public-projects"
+                ]
+            }
+        },
+        "/public-projects/{projectId}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    }
+                },
+                "description": "Get the metadata about a project",
+                "operationId": "getProjectById",
+                "tags": [
+                    "public-projects"
+                ]
+            }
+        },
+        "/public-projects/{projectId}/features/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FeatureCollection"
+                            }
+                        }
+                    }
+                },
+                "description": "GET all the features of a project as GeoJSON",
+                "operationId": "getAllFeatures",
+                "parameters": [
+                    {
+                        "name": "assetType",
+                        "in": "query",
+                        "type": "string"
+                    },
+                    {
+                        "name": "bbox",
+                        "in": "query",
+                        "type": "array",
+                        "description": "bounding box: min longitude, min latitude, max longitude, max latitude (i.e bbox=minLon,minLat, maxLon,maxLat",
+                        "items": {
+                            "type": "number"
+                        },
+                        "collectionFormat": "csv"
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Starting date for filtering of features by created date. endDate is also required."
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Ending date for filtering features by created date.  startDate is also required."
+                    }
+                ],
+                "tags": [
+                    "public-projects"
+                ]
+            }
+        },
+        "/public-projects/{projectId}/features/{featureId}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "featureId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Feature"
+                        }
+                    }
+                },
+                "description": "GET a feature of a project as GeoJSON",
+                "operationId": "getFeature",
+                "tags": [
+                    "public-projects"
+                ]
+            }
+        },
+        "/public-projects/{projectId}/overlays/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Overlay"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a list of all the overlays associated with the current map project.",
+                "operationId": "getOverlays",
+                "tags": [
+                    "public-projects"
+                ]
+            }
+        },
+        "/public-projects/{projectId}/point-cloud/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PointCloud"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a listing of all the points clouds of a project",
+                "operationId": "getAllPointClouds",
+                "tags": [
+                    "public-projects"
+                ]
+            }
+        },
+        "/public-projects/{projectId}/point-cloud/{pointCloudId}/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "name": "pointCloudId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/PointCloud"
+                        }
+                    }
+                },
+                "description": "Get point cloud of a project",
+                "operationId": "getPointCloud",
+                "tags": [
+                    "public-projects"
+                ]
+            }
+        },
+        "/public-projects/{projectId}/tile-servers/": {
+            "parameters": [
+                {
+                    "name": "projectId",
+                    "in": "path",
+                    "required": true,
+                    "type": "integer"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TileServer"
+                            }
+                        }
+                    }
+                },
+                "description": "Get a list of all the tile servers associated with the current map project.",
+                "operationId": "getTileServers",
+                "tags": [
+                    "public-projects"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "GeoAPI",
+        "version": "0.1",
+        "description": "Geospatial API for TAPIS"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "Token": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        },
+        "JWT": {
+            "type": "apiKey",
+            "name": "X-JWT-Assertion-designsafe",
+            "in": "header"
+        }
+    },
+    "security": [
+        {
+            "Token": []
+        },
+        {
+            "JWT": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "projects"
+        },
+        {
+            "name": "public-projects"
+        },
+        {
+            "name": "notifications"
+        }
+    ],
+    "definitions": {
+        "Project": {
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "public": {
+                    "type": "boolean"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "system_file": {
+                    "type": "string"
+                },
+                "system_id": {
+                    "type": "string"
+                },
+                "system_path": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "RapidProject": {
+            "properties": {
+                "system_id": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string",
+                    "default": "RApp"
+                }
+            },
+            "type": "object"
+        },
+        "TapisSaveFile": {
+            "required": [
+                "file_name",
+                "path",
+                "system_id"
+            ],
+            "properties": {
+                "system_id": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "file_name": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "User": {
+            "required": [
+                "username"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Feature": {
+            "required": [
+                "geometry",
+                "type"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "default": "Feature"
+                },
+                "geometry": {
+                    "type": "object"
+                },
+                "properties": {
+                    "type": "object"
+                },
+                "styles": {
+                    "type": "object"
+                },
+                "assets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Asset"
+                    }
+                }
+            },
+            "type": "object"
+        },
+        "Asset": {
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "asset_type": {
+                    "type": "string"
+                },
+                "original_path": {
+                    "type": "string"
+                },
+                "original_name": {
+                    "type": "string"
+                },
+                "display_path": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "FeatureCollection": {
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "default": "FeatureCollection"
+                },
+                "features": {
+                    "$ref": "#/definitions/Feature"
+                }
+            },
+            "type": "object"
+        },
+        "OkResponse": {
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "default": "accepted"
+                }
+            },
+            "type": "object"
+        },
+        "TapisFileUpload": {
+            "properties": {
+                "system_id": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "TapisFileImport": {
+            "required": [
+                "files"
+            ],
+            "properties": {
+                "files": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TapisFile"
+                    }
+                }
+            },
+            "type": "object"
+        },
+        "TapisFile": {
+            "required": [
+                "path",
+                "system"
+            ],
+            "properties": {
+                "system": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "Overlay": {
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "uuid": {
+                    "type": "string"
+                },
+                "minLon": {
+                    "type": "number"
+                },
+                "minLat": {
+                    "type": "number"
+                },
+                "maxLon": {
+                    "type": "number"
+                },
+                "maxLat": {
+                    "type": "number"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "label": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "PointCloud": {
+            "required": [
+                "files_info"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "conversion_parameters": {
+                    "type": "string"
+                },
+                "feature_id": {
+                    "type": "integer"
+                },
+                "task": {
+                    "$ref": "#/definitions/Task"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "files_info": {
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "Task": {
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "updated": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "type": "object"
+        },
+        "TileServer": {
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "attribution": {
+                    "type": "string"
+                },
+                "tileOptions": {
+                    "type": "object"
+                },
+                "uiOptions": {
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
+        "NotificationResponse": {
+            "properties": {
+                "status": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "created": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "viewed": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "responses": {
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        },
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        },
+        "InvalidGeoJSON": {
+            "description": "Return a custom message and 400 status code"
+        },
+        "ApiException": {
+            "description": "Return a custom message and 400 status code"
+        },
+        "InvalidEXIFData": {
+            "description": "Return a custom message and 400 status code"
+        },
+        "InvalidCoordinateReferenceSystem": {},
+        "ObservableProjectAlreadyExists": {}
+    }
+}
